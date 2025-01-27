@@ -12,28 +12,30 @@ class SignUpScreen extends StatefulWidget {
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
+
 bool _passwordVisible = false;
-  bool _confirmPasswordVisible = false;
-   final AuthService authService = AuthService();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
- 
- 
+bool _confirmPasswordVisible = false;
+final AuthService authService = AuthService();
+final TextEditingController nameController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+final TextEditingController confirmPasswordController = TextEditingController();
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
-   Future<bool> Signup(){
-    return authService.register(
+  Future<bool> Signup() async {
+    bool result = await authService.register(
       context: context,
       username: nameController.text,
       email: emailController.text,
       password: passwordController.text,
       confirmpas: confirmPasswordController.text,
     );
+    if (result) {
+      Navigator.pushNamed(context, LoginScreen.routeName);
+    }
+    return result;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         SizedBox(height: 20),
 
                         // Full Name Field
-                       CustomTextField(
+                        CustomTextField(
                           controller: nameController,
                           labelText: "Name",
                           hintText: "Enter your name",
@@ -96,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         SizedBox(height: 15),
 
-                       CustomTextField(
+                        CustomTextField(
                           controller: emailController,
                           labelText: "Email",
                           hintText: "Enter your email",
@@ -113,9 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         SizedBox(height: 15),
 
-                       
-
-                         CustomTextField(
+                        CustomTextField(
                           controller: passwordController,
                           labelText: "Password",
                           hintText: "Enter your password",
@@ -180,13 +180,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             bool result = await Signup();
                             print(result);
                             if (result) {
-                              Navigator.pushNamed(context, LoginScreen.routeName);
+                              Navigator.pushNamed(
+                                  context, LoginScreen.routeName);
                             }
                           },
                           child: SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Signup();
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: primaryColor,
                                 padding: EdgeInsets.symmetric(vertical: 15),
