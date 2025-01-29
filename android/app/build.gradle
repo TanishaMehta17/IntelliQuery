@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.smart_content_recommendation_application"
+    namespace  "com.example.smart_content_recommendation_application"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

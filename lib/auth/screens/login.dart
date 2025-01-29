@@ -4,6 +4,7 @@ import 'package:smart_content_recommendation_application/auth/screens/register.d
 import 'package:smart_content_recommendation_application/auth/services/authService.dart';
 import 'package:smart_content_recommendation_application/common/colors.dart';
 import 'package:smart_content_recommendation_application/common/typography.dart';
+import 'package:smart_content_recommendation_application/splash_screen.dart';
 import 'package:smart_content_recommendation_application/utils/CustomTextFormField.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-   bool _passwordVisible = false;
+  bool _passwordVisible = false;
 
   final AuthService authService = AuthService();
 
@@ -32,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-    void signin(BuildContext context) {
+  void signin(BuildContext context) {
     authService.login(
       context: context,
       email: emailController.text,
@@ -40,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
       callback: (bool success) {
         if (success) {
           print("login Succesfull");
-         // Navigator.pushNamed(context, Joinorcreateteam.routeName);
+          Navigator.pushNamed(context, SplashScreen.routeName);
         } else {
           print("Password is Incorrect");
         }
@@ -109,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         SizedBox(height: 15),
-                         CustomTextField(
+                        CustomTextField(
                           controller: passwordController,
                           labelText: "Password",
                           hintText: "Enter your password",
@@ -140,7 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              signin(context);
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: primaryColor,
                               shape: RoundedRectangleBorder(

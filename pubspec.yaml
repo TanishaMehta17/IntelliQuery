@@ -41,6 +41,17 @@ dependencies:
   url_launcher:
   youtube_player_flutter:
   flutter_inappwebview:
+  dio: 
+  permission_handler: 
+  path_provider: 
+  image_gallery_saver: ^2.0.3
+  riverpod:
+  flutter_riverpod:
+  chat_gpt_sdk:
+    git:
+      url: https://github.com/iampawan/Flutter-ChatGPT.git
+  flutter_dotenv: ^5.0.2
+      
   
 
 dev_dependencies:

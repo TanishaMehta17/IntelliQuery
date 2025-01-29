@@ -25,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<bool> Signup() async {
     bool result = await authService.register(
       context: context,
-      username: nameController.text,
+      name: nameController.text,
       email: emailController.text,
       password: passwordController.text,
       confirmpas: confirmPasswordController.text,

@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_content_recommendation_application/auth/screens/login.dart';
 import 'package:smart_content_recommendation_application/auth/services/authService.dart';
 import 'package:smart_content_recommendation_application/content/screens/home_screen.dart';
+import 'package:smart_content_recommendation_application/providers/articleProvider.dart';
+import 'package:smart_content_recommendation_application/providers/homeProvider.dart';
+import 'package:smart_content_recommendation_application/providers/imageProvider.dart';
 import 'package:smart_content_recommendation_application/providers/queryProvider.dart';
 import 'package:smart_content_recommendation_application/providers/userProvider.dart';
+import 'package:smart_content_recommendation_application/providers/videoProivder.dart';
 import 'package:smart_content_recommendation_application/routes.dart';
 import 'package:smart_content_recommendation_application/splash_screen.dart';
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Permission.storage.request();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -20,6 +26,10 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => QueryProvider()),
+        ChangeNotifierProvider(create: (_) => ArticleProvider()),
+        ChangeNotifierProvider(create: (_) => ImagesProvider()),
+        ChangeNotifierProvider(create: (_) => VideoProvider()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
       ],
       child: const MyApp(),
     ),
@@ -53,10 +63,10 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
-      // home: isUserLoggedIn
-      //     ? SplashScreen()
-      //     :  LoginScreen(), 
-       home: HomeScreen(),
+      home: isUserLoggedIn
+          ? SplashScreen()
+          :  LoginScreen(), 
+     //  home: HomeScreen(),
       onGenerateRoute: (settings) => generateRoute(settings),
     );
   }

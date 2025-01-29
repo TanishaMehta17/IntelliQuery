@@ -50,13 +50,13 @@ callback(true);
 
   Future<bool> register(
       {required BuildContext context,
-      required String username,
+      required String name,
       required String email,
       required String password,
       required String confirmpas}) async {
     User user = User(
       id: '',
-      username: username,
+      name: name,
       password: password,
       confirmpas: confirmpas,
       email: email,

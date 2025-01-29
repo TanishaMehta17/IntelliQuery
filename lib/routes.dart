@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_content_recommendation_application/auth/screens/login.dart';
 import 'package:smart_content_recommendation_application/auth/screens/register.dart';
+import 'package:smart_content_recommendation_application/chatGPT/chat_screen.dart';
+import 'package:smart_content_recommendation_application/content/screens/home_Tab.dart';
 import 'package:smart_content_recommendation_application/content/screens/home_screen.dart';
 import 'package:smart_content_recommendation_application/splash_screen.dart';
 
@@ -27,7 +29,16 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) =>  HomeScreen(),
       );
-     
+      case ChatScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) =>  ChatScreen(),
+      );  
+     case HomeTab.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) =>  HomeTab(),
+      );
     default:
       return MaterialPageRoute(
         settings: routeSettings,
