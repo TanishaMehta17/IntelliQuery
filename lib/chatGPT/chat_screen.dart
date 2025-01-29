@@ -16,7 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isTyping = false;
  
 
-  final String geminiApiKey = 'AIzaSyAppzSkCtBLPFZJQxam4YdfLwiDBFuN2qs';
+  final String geminiApiKey = 'YOUR_API_KEY';
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
