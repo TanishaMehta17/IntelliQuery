@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+// import 'dart:typed_data';
+// import 'package:dio/dio.dart';
+// import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:permission_handler/permission_handler.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_content_recommendation_application/global_variable.dart';
 
 class ContentService {
@@ -93,44 +93,44 @@ class ContentService {
     }
   }
 
-  Future<void> downloadImage(BuildContext context, String imageUrl) async {
-    try {
-      // Request storage permission for Android (not needed for Android 13+)
-      if (await Permission.storage.request().isGranted ||
-          await Permission.photos.request().isGranted) {
-        // Download image bytes
-        var response = await Dio().get(
-          imageUrl,
-          options: Options(responseType: ResponseType.bytes),
-        );
+  // Future<void> downloadImage(BuildContext context, String imageUrl) async {
+  //   try {
+  //     // Request storage permission for Android (not needed for Android 13+)
+  //     if (await Permission.storage.request().isGranted ||
+  //         await Permission.photos.request().isGranted) {
+  //       // Download image bytes
+  //       var response = await Dio().get(
+  //         imageUrl,
+  //         options: Options(responseType: ResponseType.bytes),
+  //       );
 
-        if (response.statusCode == 200) {
-          Uint8List imageBytes = Uint8List.fromList(response.data);
+  //       if (response.statusCode == 200) {
+  //         Uint8List imageBytes = Uint8List.fromList(response.data);
 
-          // Save to gallery
-          final result = await ImageGallerySaver.saveImage(imageBytes);
+  //         // Save to gallery
+  //         final result = await ImageGallerySaver.saveImage(imageBytes);
 
-          if (result != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Image saved to gallery!")),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Failed to save image!")),
-            );
-          }
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Storage permission denied")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Download failed: $e")),
-      );
-    }
-  }
+  //         if (result != null) {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text("Image saved to gallery!")),
+  //           );
+  //         } else {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text("Failed to save image!")),
+  //           );
+  //         }
+  //       }
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text("Storage permission denied")),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Download failed: $e")),
+  //     );
+  //   }
+  // }
 
   Future<void> saveQuery(String query, String userId) async {
   final response = await http.post(

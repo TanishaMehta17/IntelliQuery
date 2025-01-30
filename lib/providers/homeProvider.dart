@@ -2,61 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:smart_content_recommendation_application/global_variable.dart';
-
-class RecommendationData {
-  final String query;
-  final List<String> images;
-  final List<String> videos;
-  final List<String> articles;
-
-  RecommendationData({
-    required this.query,
-    required this.images,
-    required this.videos,
-    required this.articles,
-  });
-
-  factory RecommendationData.fromJson(Map<String, dynamic> json) {
-    return RecommendationData(
-      query: json['query'],
-      images: List<String>.from(json['images']),
-      videos: List<String>.from(json['videos']),
-      articles: List<String>.from(json['articles']),
-    );
-  }
-}
+import 'package:provider/provider.dart';
+import 'package:smart_content_recommendation_application/providers/userProvider.dart'; // Make sure to import provider
 
 class HomeProvider extends ChangeNotifier {
-  List<RecommendationData> _recommendations = [];
+  List<String> _recommendations = []; // Store only query strings
   bool _isEmpty = true;
 
-  List<RecommendationData> get recommendations => _recommendations;
+  List<String> get recommendations => _recommendations;
   bool get isEmpty => _isEmpty;
 
-  Future<void> fetchRecommendations() async {
+  void setRecommendations(List<String> newRecommendations) {
+    _recommendations = newRecommendations;
+    _isEmpty = false; // When you set recommendations, it is no longer empty
+    notifyListeners();
+  }
+
+  Future<void> fetchRecommendations(String userId) async {
     try {
-      final response = await http.get(Uri.parse('$uri/api/recommendation/recommend'));
+      // Get userId from your user provider (assuming you have UserProvider)
+
+      if (userId == null || userId.isEmpty) {
+        print("User ID is not available.");
+        return;
+      }
+
+      // Make the API call, passing the userId as a query parameter
+      final response = await http.get(Uri.parse('$uri/api/recommendation/recommend?userId=$userId'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['recommendations'].isEmpty) {
-          _isEmpty = true;
+        print("=======================================");
+        print(data);
+
+        if (data['recommendations'] != null && data['recommendations'].isNotEmpty) {
+          _recommendations = List<String>.from(data['recommendations']); // Store only queries
+          _isEmpty = false; // We have data, so it's not empty
         } else {
-          _recommendations = (data['recommendations'] as List)
-              .map((item) => RecommendationData.fromJson(item))
-              .toList();
-          _isEmpty = false;
+          _isEmpty = true;
         }
       } else {
         _isEmpty = true;
       }
     } catch (e) {
+      print("Error fetching recommendations: $e");
       _isEmpty = true;
     }
     notifyListeners();
-  }
-
-  void onNewQueryAdded() {
-    fetchRecommendations();
   }
 }

@@ -99,7 +99,7 @@ class ImageTab extends StatelessWidget {
                   onPressed: () async {
     //
     //
-    await  contentService.downloadImage(context, image['imageUrl']);
+   // await  contentService.downloadImage(context, image['imageUrl']);
   },
                 ),
                 TextButton(

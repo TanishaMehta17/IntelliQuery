@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_content_recommendation_application/auth/screens/login.dart';
@@ -16,11 +17,12 @@ import 'package:smart_content_recommendation_application/splash_screen.dart';
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+ 
   await Permission.storage.request();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-
+  await dotenv.load(); 
   runApp(
     MultiProvider(
       providers: [
@@ -66,7 +68,7 @@ class _MyAppState extends State<MyApp> {
       home: isUserLoggedIn
           ? SplashScreen()
           :  LoginScreen(), 
-     //  home: HomeScreen(),
+      //  home: LoginScreen(),
       onGenerateRoute: (settings) => generateRoute(settings),
     );
   }

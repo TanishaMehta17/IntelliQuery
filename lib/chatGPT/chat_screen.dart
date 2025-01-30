@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_content_recommendation_application/chatGPT/chat_message.dart';
 import 'package:smart_content_recommendation_application/utils/three_dots.dart';
@@ -16,13 +17,12 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isTyping = false;
  
 
-  final String geminiApiKey = 'YOUR_API_KEY';
+  final String? geminiApiKey = dotenv.env['API_KEY'] ;
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
     String userMessage = _controller.text;
     ChatMessage message = ChatMessage(text: userMessage, sender: "user", isImage: false);
-
     setState(() {
       _messages.insert(0, message);
       _isTyping = true;
