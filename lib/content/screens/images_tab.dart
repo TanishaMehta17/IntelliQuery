@@ -97,9 +97,8 @@ class ImageTab extends StatelessWidget {
                   icon: Icon(Icons.download),
                   label: Text("Download"),
                   onPressed: () async {
-    //
-    //
-   // await  contentService.downloadImage(context, image['imageUrl']);
+    
+   await  contentService.downloadImage(context, image['imageUrl']);
   },
                 ),
                 TextButton(

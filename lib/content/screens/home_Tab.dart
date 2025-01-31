@@ -59,7 +59,7 @@ class _HomeTabState extends State<HomeTab> {
           future: Future.wait([
             contentService
                 .fetchImage(query), // Fetch image related to the query
-            // contentService.fetchVideos(query), // Fetch
+             contentService.fetchVideos(query), // Fetch
           ]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,8 +74,8 @@ class _HomeTabState extends State<HomeTab> {
 
             final images = (snapshot.data![0] as List<dynamic>)
                 .cast<Map<String, dynamic>>();
-// final videos = (snapshot.data![1] as List<dynamic>)
-//                // .cast<Map<String, dynamic>>();
+ final videos = (snapshot.data![1] as List<dynamic>)
+               .cast<Map<String, dynamic>>();
 
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -90,7 +90,7 @@ class _HomeTabState extends State<HomeTab> {
                               fontSize: 18, fontWeight: FontWeight.bold)),
                     ),
                     _buildImageGrid(images),
-                    //  _buildVideoList(videos),
+                      _buildVideoList(videos),
                   ],
                 ),
               ),
@@ -100,67 +100,80 @@ class _HomeTabState extends State<HomeTab> {
       },
     );
   }
-
-  Widget _buildImageGrid(List<Map<String, dynamic>> images) {
-    return images.isEmpty
-        ? Center(child: Text("No images available"))
-        : GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+Widget _buildImageGrid(List<Map<String, dynamic>> images) {
+  return images.isEmpty
+      ? Center(child: Text("No images available"))
+      : Column(
+          children: [
+            Text("Images", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            GridView.builder(
+              shrinkWrap: true, // Ensures it doesn't take infinite height
+              physics: NeverScrollableScrollPhysics(), // Prevents independent scrolling
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, 
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              padding: EdgeInsets.all(10),
+              itemCount: images.length,
+              itemBuilder: (context, index) {
+                final image = images[index];
+                return Image.network(
+                  image['smallImageUrl'] ?? '',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                );
+              },
             ),
-            padding: EdgeInsets.all(10),
-            itemCount: images.length,
-            itemBuilder: (context, index) {
-              final image = images[index];
-              return Image.network(
-                image['smallImageUrl'] ?? '',
-                fit: BoxFit.cover,
-                width: double.infinity,
-              );
-            },
-          );
-  }
+          ],
+        );
+}
 
-  Widget _buildVideoList(List<Map<String, dynamic>> videos) {
-    return videos.isEmpty
-        ? Center(child: Text("No videos available"))
-        : ListView.builder(
-            itemCount: videos.length,
-            itemBuilder: (context, index) {
-              final video = videos[index] as Map<String, dynamic>;
-              final videoUrl = video['videoUrl'] ?? '';
-              final title = video['title'] ?? 'Untitled';
-              final thumbnailUrl = getThumbnailUrl(videoUrl);
+Widget _buildVideoList(List<Map<String, dynamic>> videos) {
+  return videos.isEmpty
+      ? Center(child: Text("No videos available"))
+      : Column(
+          children: [
+            Text("Videos", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ListView.builder(
+              shrinkWrap: true, // Allows it to fit within the parent
+              physics: NeverScrollableScrollPhysics(), // Prevents independent scrolling
+              itemCount: videos.length,
+              itemBuilder: (context, index) {
+                final video = videos[index];
+                final videoUrl = video['videoUrl'] ?? '';
+                final title = video['title'] ?? 'Untitled';
+                final thumbnailUrl = getThumbnailUrl(videoUrl);
 
-              return Card(
-                child: ListTile(
-                  leading: thumbnailUrl.isNotEmpty
-                      ? Image.network(
-                          thumbnailUrl,
-                          width: 100,
-                          fit: BoxFit.cover,
-                        )
-                      : Icon(Icons.video_library, size: 50),
-                  title: Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                return Card(
+                  child: ListTile(
+                    leading: thumbnailUrl.isNotEmpty
+                        ? Image.network(
+                            thumbnailUrl,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          )
+                        : Icon(Icons.video_library, size: 50),
+                    title: Text(
+                      title,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    onTap: () async {
+                      if (videoUrl.isNotEmpty && await canLaunch(videoUrl)) {
+                        await launch(videoUrl);
+                      } else {
+                        throw 'Could not launch $videoUrl';
+                      }
+                    },
                   ),
-                  onTap: () async {
-                    if (videoUrl.isNotEmpty && await canLaunch(videoUrl)) {
-                      await launch(videoUrl);
-                    } else {
-                      throw 'Could not launch $videoUrl';
-                    }
-                  },
-                ),
-              );
-            },
-          );
-  }
+                );
+              },
+            ),
+          ],
+        );
+}
+
+
 
   String extractVideoId(String videoUrl) {
     final uri = Uri.tryParse(videoUrl);

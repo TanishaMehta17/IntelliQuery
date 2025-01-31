@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_content_recommendation_application/content/screens/article_tab.dart';
+import 'package:smart_content_recommendation_application/content/screens/file_upload.dart';
 import 'package:smart_content_recommendation_application/content/screens/home_Tab.dart';
 import 'package:smart_content_recommendation_application/content/screens/images_tab.dart';
 import 'package:smart_content_recommendation_application/content/screens/videos_tab.dart';
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           title: TextField(
@@ -56,6 +57,7 @@ class HomeScreen extends StatelessWidget {
             ImageTab(),
             ArticleTab(),
             VideoTab(),
+            FileUploadScreen(),
           ],
         ),
         bottomNavigationBar: TabBar(
@@ -64,6 +66,7 @@ class HomeScreen extends StatelessWidget {
             Tab(icon: Icon(Icons.image), text: 'Images'),
             Tab(icon: Icon(Icons.article), text: 'Articles'),
             Tab(icon: Icon(Icons.video_collection), text: 'Videos'),
+            Tab(icon: Icon(Icons.file_copy),text: 'File',)
           ],
         ),
       ),

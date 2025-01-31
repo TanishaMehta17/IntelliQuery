@@ -1,10 +1,10 @@
 import 'dart:convert';
-// import 'dart:typed_data';
-// import 'package:dio/dio.dart';
-// import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_content_recommendation_application/global_variable.dart';
 
 class ContentService {
@@ -93,45 +93,6 @@ class ContentService {
     }
   }
 
-  // Future<void> downloadImage(BuildContext context, String imageUrl) async {
-  //   try {
-  //     // Request storage permission for Android (not needed for Android 13+)
-  //     if (await Permission.storage.request().isGranted ||
-  //         await Permission.photos.request().isGranted) {
-  //       // Download image bytes
-  //       var response = await Dio().get(
-  //         imageUrl,
-  //         options: Options(responseType: ResponseType.bytes),
-  //       );
-
-  //       if (response.statusCode == 200) {
-  //         Uint8List imageBytes = Uint8List.fromList(response.data);
-
-  //         // Save to gallery
-  //         final result = await ImageGallerySaver.saveImage(imageBytes);
-
-  //         if (result != null) {
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(content: Text("Image saved to gallery!")),
-  //           );
-  //         } else {
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(content: Text("Failed to save image!")),
-  //           );
-  //         }
-  //       }
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text("Storage permission denied")),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Download failed: $e")),
-  //     );
-  //   }
-  // }
-
   Future<void> saveQuery(String query, String userId) async {
   final response = await http.post(
     Uri.parse('$uri/api/query/save-query'),
@@ -152,5 +113,97 @@ class ContentService {
     throw Exception('Failed to save query: ${response.body}');
   }
 }
+
+ Future<void> downloadImage(BuildContext context, String imageUrl) async {
+    // Request storage permission
+    PermissionStatus permissionStatus = await Permission.storage.request();
+
+    if (permissionStatus.isGranted) {
+      try {
+        // Get the directory to save the image
+        final appDocDir = await getApplicationDocumentsDirectory();
+        final savePath = '${appDocDir.path}/downloaded_image.jpg';
+
+        // Start downloading the image
+        Dio dio = Dio();
+        Response response = await dio.get(
+          imageUrl,
+          options: Options(
+            responseType: ResponseType.bytes,
+            followRedirects: false,
+            validateStatus: (status) => status! < 500,
+          ),
+        );
+
+        // Save the image to the file
+        File file = File(savePath);
+        await file.writeAsBytes(response.data);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Image downloaded successfully!')),
+        );
+      } catch (e) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to download image: $e')),
+        );
+      }
+    } else {
+      // If permission is not granted
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Storage permission is required to download images')),
+      );
+    }
+  }
+
+ Future<String?> uploadFile(File selectedFile) async {
+    try {
+      Dio dio = Dio();
+      String fileName = selectedFile.path.split('/').last;
+
+      // Step 1: Request Pre-Signed URL from Backend
+      final presignedResponse = await dio.post(
+        "$uri/api/file/presigned-url",
+        data: {"fileName": fileName},
+      );
+
+      if (presignedResponse.statusCode != 200 || 
+          presignedResponse.data["url"] == null) {
+        throw Exception("Failed to get pre-signed URL.");
+      }
+
+      String presignedUrl = presignedResponse.data["url"];
+      String fileUrl = presignedResponse.data["fileUrl"]; // S3 URL
+
+      // Step 2: Upload the File to S3
+      final s3Response = await dio.put(
+        presignedUrl,
+        data: selectedFile.openRead(),
+        options: Options(headers: {
+          "Content-Type": "multipart/form-data",
+        }),
+      );
+
+      if (s3Response.statusCode != 200) {
+        throw Exception("Failed to upload to S3.");
+      }
+
+      // Step 3: Notify Backend about Uploaded File URL
+      final backendResponse = await dio.post(
+        "$uri/api/file/save",
+        data: {"fileUrl": fileUrl},
+      );
+
+      if (backendResponse.statusCode == 200) {
+        return backendResponse.data["summary"] ?? "No summary available.";
+      } else {
+        return backendResponse.data["error"] ?? "Error in processing.";
+      }
+    } catch (e) {
+      print("Upload Failed: $e");
+      return "Error: Something went wrong!";
+    }
+  }
 
 }
