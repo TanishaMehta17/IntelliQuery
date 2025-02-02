@@ -4,6 +4,7 @@ import 'package:smart_content_recommendation_application/auth/screens/register.d
 import 'package:smart_content_recommendation_application/auth/services/authService.dart';
 import 'package:smart_content_recommendation_application/common/colors.dart';
 import 'package:smart_content_recommendation_application/common/typography.dart';
+import 'package:smart_content_recommendation_application/global_variable.dart';
 import 'package:smart_content_recommendation_application/splash_screen.dart';
 import 'package:smart_content_recommendation_application/utils/CustomTextFormField.dart';
 
@@ -51,6 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("URIIIIIIIIIIIIIIIIIIII");
+    print("$uri");
     return Scaffold(
       body: Stack(
         children: [

@@ -1,2 +1,3 @@
 import 'package:flutter/material.dart';
-String uri = 'http://192.168.107.29:3000';
+String uri = 'https://24v0bh90ag.execute-api.us-east-1.amazonaws.com/dev';
+

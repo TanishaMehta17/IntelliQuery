@@ -10,7 +10,7 @@ import 'package:smart_content_recommendation_application/global_variable.dart';
 class ContentService {
   Future<List<dynamic>> fetchImage(String query) async {
     final response = await http.post(
-      Uri.parse('$uri/api/content/images'),
+      Uri.parse('$uri/unsplash/images'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -35,7 +35,7 @@ class ContentService {
 
   Future<List<Map<String, dynamic>>> fetchVideos(String query) async {
     final response = await http.post(
-      Uri.parse('$uri/api/content/videos'),
+      Uri.parse('$uri/youtube/videos'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -64,7 +64,7 @@ class ContentService {
 
   Future<List<Map<String, String>>> fetchArticles(String query) async {
     final response = await http.post(
-      Uri.parse('$uri/api/content/articles'),
+      Uri.parse('$uri/test-ai'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -95,7 +95,7 @@ class ContentService {
 
   Future<void> saveQuery(String query, String userId) async {
   final response = await http.post(
-    Uri.parse('$uri/api/query/save-query'),
+    Uri.parse('$uri/query/recommend'),
     headers: {'Content-Type': 'application/json'},
     body: json.encode({
       'query': query,
@@ -157,53 +157,6 @@ class ContentService {
     }
   }
 
- Future<String?> uploadFile(File selectedFile) async {
-    try {
-      Dio dio = Dio();
-      String fileName = selectedFile.path.split('/').last;
-
-      // Step 1: Request Pre-Signed URL from Backend
-      final presignedResponse = await dio.post(
-        "$uri/api/file/presigned-url",
-        data: {"fileName": fileName},
-      );
-
-      if (presignedResponse.statusCode != 200 || 
-          presignedResponse.data["url"] == null) {
-        throw Exception("Failed to get pre-signed URL.");
-      }
-
-      String presignedUrl = presignedResponse.data["url"];
-      String fileUrl = presignedResponse.data["fileUrl"]; // S3 URL
-
-      // Step 2: Upload the File to S3
-      final s3Response = await dio.put(
-        presignedUrl,
-        data: selectedFile.openRead(),
-        options: Options(headers: {
-          "Content-Type": "multipart/form-data",
-        }),
-      );
-
-      if (s3Response.statusCode != 200) {
-        throw Exception("Failed to upload to S3.");
-      }
-
-      // Step 3: Notify Backend about Uploaded File URL
-      final backendResponse = await dio.post(
-        "$uri/api/file/save",
-        data: {"fileUrl": fileUrl},
-      );
-
-      if (backendResponse.statusCode == 200) {
-        return backendResponse.data["summary"] ?? "No summary available.";
-      } else {
-        return backendResponse.data["error"] ?? "Error in processing.";
-      }
-    } catch (e) {
-      print("Upload Failed: $e");
-      return "Error: Something went wrong!";
-    }
-  }
+ 
 
 }
