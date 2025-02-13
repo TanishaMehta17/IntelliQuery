@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
-String uri = 'https://24v0bh90ag.execute-api.us-east-1.amazonaws.com/dev';
+String uri = 'https://smart-content-recommendation-application-backend-rbcz68wud.vercel.app';
 
