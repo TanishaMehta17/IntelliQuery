@@ -20,7 +20,7 @@ class AuthService {
     required OtpVerificationCallback callback,
   }) async {
     final response = await http.post(
-      Uri.parse('$uri/api/auth/login'),
+      Uri.parse('$uri/auth/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -64,7 +64,7 @@ callback(true);
     );
     print(user.toJson());
     final response = await http.post(
-      Uri.parse('$uri/api/auth/signup'),
+      Uri.parse('$uri/auth/signup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -92,7 +92,7 @@ callback(true);
       }
 
       var tokenRes = await http.get(
-        Uri.parse('$uri/api/auth/TokenisValid'),
+        Uri.parse('$uri/auth/tokenisvalid'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'token': token!
@@ -103,7 +103,7 @@ callback(true);
       print(response);
       if (response == true) {
         http.Response userRes = await http.get(
-          Uri.parse('$uri/api/auth/'),
+          Uri.parse('$uri/auth/getdata'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'token': token

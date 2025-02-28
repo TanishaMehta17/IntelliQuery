@@ -10,7 +10,7 @@ import 'package:smart_content_recommendation_application/global_variable.dart';
 class ContentService {
   Future<List<dynamic>> fetchImage(String query) async {
     final response = await http.post(
-      Uri.parse('$uri/api/content/images'),
+      Uri.parse('$uri/content/images'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -35,7 +35,7 @@ class ContentService {
 
   Future<List<Map<String, dynamic>>> fetchVideos(String query) async {
     final response = await http.post(
-      Uri.parse('$uri/api/content/videos'),
+      Uri.parse('$uri/content/videos'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -64,7 +64,7 @@ class ContentService {
 
   Future<List<Map<String, String>>> fetchArticles(String query) async {
     final response = await http.post(
-      Uri.parse('$uri/api/content/articles'),
+      Uri.parse('$uri/content/articles'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -95,7 +95,7 @@ class ContentService {
 
   Future<void> saveQuery(String query, String userId) async {
   final response = await http.post(
-    Uri.parse('$uri/api/query/save-query'),
+    Uri.parse('$uri/query/query'),
     headers: {'Content-Type': 'application/json'},
     body: json.encode({
       'query': query,

@@ -1,3 +1,3 @@
 import 'package:flutter/material.dart';
-String uri = 'https://smart-content-recommendation-application-backend-rbcz68wud.vercel.app';
+String uri = 'http://smart-content-recommendation-application-backend.vercel.app/api/';
 

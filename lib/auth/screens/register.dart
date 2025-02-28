@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          'Login to continue with AIHub',
+                          'Login to continue with IntelliQuery',
                           style: SCRTypography.subHeading,
                         ),
                         SizedBox(height: 20),

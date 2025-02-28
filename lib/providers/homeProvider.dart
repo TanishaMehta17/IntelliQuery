@@ -28,7 +28,7 @@ class HomeProvider extends ChangeNotifier {
       }
 
       // Make the API call, passing the userId as a query parameter
-      final response = await http.get(Uri.parse('$uri/api/recommendation/recommend?userId=$userId'));
+      final response = await http.get(Uri.parse('$uri/recommendation/recommendation?userId=$userId'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

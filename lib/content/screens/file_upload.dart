@@ -14,7 +14,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
   String? _summary;
   bool _isLoading = false;
 
-  final String backendUrl = "$uri/api/file/upload"; // Adjust for iOS/web
+  final String backendUrl = "$uri/file/upload"; // Adjust for iOS/web
 
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
