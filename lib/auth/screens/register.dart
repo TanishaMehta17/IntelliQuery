@@ -73,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         // Title and Subtitle
                         Text(
-                          'Welcome to AIHub!',
+                          'Welcome to IntelliQuery!',
                           style: SCRTypography.heading,
                         ),
                         SizedBox(height: 5),
