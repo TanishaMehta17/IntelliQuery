@@ -28,13 +28,11 @@ class HomeProvider extends ChangeNotifier {
       }
 
       // Make the API call, passing the userId as a query parameter
-      final response = await http.get(Uri.parse('$uri/recommendation/recommendation?userId=$userId'));
+      final response = await http.get(Uri.parse('$uri/api/recommendation/recommendation?userId=$userId'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print("=======================================");
-        print(data);
-
+       
         if (data['recommendations'] != null && data['recommendations'].isNotEmpty) {
           _recommendations = List<String>.from(data['recommendations']); // Store only queries
           _isEmpty = false; // We have data, so it's not empty

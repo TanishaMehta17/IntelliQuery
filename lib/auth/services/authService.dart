@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -20,7 +19,7 @@ class AuthService {
     required OtpVerificationCallback callback,
   }) async {
     final response = await http.post(
-      Uri.parse('$uri/auth/login'),
+      Uri.parse('$uri/api/auth/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -64,7 +63,7 @@ callback(true);
     );
     print(user.toJson());
     final response = await http.post(
-      Uri.parse('$uri/auth/signup'),
+      Uri.parse('$uri/api/auth/signup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -80,7 +79,7 @@ callback(true);
     }
   }
   // get user data
-  void getUserData(
+ void getUserData(
     BuildContext context,
   ) async {
     try {
@@ -90,9 +89,11 @@ callback(true);
       if (token == null) {
         prefs.setString('token', '');
       }
+      
 
-      var tokenRes = await http.get(
-        Uri.parse('$uri/auth/tokenisvalid'),
+
+      var tokenRes = await http.post(
+        Uri.parse('$uri/api/auth/TokenisValid'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'token': token!
@@ -103,7 +104,7 @@ callback(true);
       print(response);
       if (response == true) {
         http.Response userRes = await http.get(
-          Uri.parse('$uri/auth/getdata'),
+          Uri.parse('$uri/api/auth/'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'token': token
